@@ -10,18 +10,23 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import masterung.androidthai.in.th.mylovefriend.MainActivity;
 import masterung.androidthai.in.th.mylovefriend.R;
+import masterung.androidthai.in.th.mylovefriend.utility.MyAlert;
 
 public class RegisterFragment extends Fragment{
 
     //    Explicit
     private Uri uri;
     private ImageView imageView;
+    private boolean aBoolean = true;    // true ==> Non Choose Avata
 
 
     @Override
@@ -37,11 +42,46 @@ public class RegisterFragment extends Fragment{
     }   // onActivity
 
     @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        if (item.getItemId() == R.id.itemUpload) {
+
+//            To Do
+            checkAvataAnText();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void checkAvataAnText() {
+
+//        Check Avata
+        if (aBoolean) {
+//            No Avata
+            MyAlert myAlert = new MyAlert(getActivity());
+            myAlert.normalDialog("No Avata", "Please Choose Image");
+        }
+
+
+
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+
+        inflater.inflate(R.menu.menu_register, menu);
+
+    }
+
+    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (resultCode == getActivity().RESULT_OK) {
 
+            aBoolean = false;   // ==> Choose Avata Success
             uri = data.getData();
 
             try {
@@ -97,6 +137,10 @@ public class RegisterFragment extends Fragment{
                 getActivity().getSupportFragmentManager().popBackStack();
             }
         });
+
+        setHasOptionsMenu(true);
+
+
     }
 
     @Nullable
